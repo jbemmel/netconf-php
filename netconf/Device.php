@@ -185,7 +185,7 @@ class Device {
                 case "SHELL":
                     break;
 		case EXP_EOF :
-		    throw new NetconfExpection("Timeout Connecting to device");
+		    throw new NetconfException("Timeout Connecting to device");
                 default:
                     throw new NetconfException("Device not found/ unknown error occurred while connecting to Device");
                 }
