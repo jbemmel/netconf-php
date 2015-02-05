@@ -380,7 +380,7 @@ class Device {
         $reply = $this->convert_to_xml($this->last_rpc_reply);
         $tagList[0] = "rpc-error";
         $tagList[1] = "error-severity";
-        $errorSeverity = $reply->findValue($tagList);
+        $errorSeverity = $reply->find_value($tagList);
         if ($errorSeverity != null && $errorSeverity == "error")
             return true;
         return false;
@@ -398,7 +398,7 @@ class Device {
         $reply = $this->convert_to_xml($this->last_rpc_reply);
         $tagList[0] = "rpc-error";
         $tagList[1] = "error-severity";
-        $errorSeverity = $reply->findValue($tagList);
+        $errorSeverity = $reply->find_value($tagList);
         if ($errorSeverity != null && $errorSeverity == "warning")
             return true;
         return false;
@@ -692,7 +692,7 @@ class Device {
             return null;
         }
         $tags[0] = "output";
-        $output = $xmlreply->findValue($tags);
+        $output = $xmlreply->find_value($tags);
         if ($output != null) 
             return $output;
         return $rpcReply;
