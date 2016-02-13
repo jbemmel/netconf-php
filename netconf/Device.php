@@ -870,6 +870,7 @@ class Device {
         $rpcReply = $this->get_rpc_reply($rpc);
         $this->last_rpc_reply = $rpcReply;
         fclose($this->stream);  
+        $this->is_connected = $this->is_ok() ? false : true;
      }
     /**
      * Create hello_rpc packet with user defined capabilities
