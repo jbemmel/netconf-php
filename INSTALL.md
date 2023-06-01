@@ -6,12 +6,13 @@ The NETCONF PHP APIs depends on expect package of php http://pecl.php.net/packag
 INSTALLING PREREQUISITES IN UBUNTU
 ===================================
 	* Install PHP and PHP Development Framwork
-	  apt-get install php5 php5-dev (current stable version of php).
+	  sudo apt-get install php5.6 php5.6-dev (current stable version of php).
      
         Update 2023-6-1: [source](https://linuxize.com/post/how-to-install-php-8-on-ubuntu-20-04/)
          sudo apt install -y software-properties-common
          sudo add-apt-repository ppa:ondrej/php
-         sudo apt install -y php7.4 php7.4-dev # PHP expect module does not support PHP 8.0 yet
+         sudo apt install -y php7.4 php7.4-dev # PHP expect module does not support PHP 8.0 yet, and PEAR only supports 4/5
+	 
 	* Install php-pear (PHP Extension and Application Repository)
 	  apt-get install php-pear
 	  to verify whether pear is installed properly or not, type command pear, there you will get
