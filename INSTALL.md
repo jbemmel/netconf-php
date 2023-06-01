@@ -11,7 +11,7 @@ INSTALLING PREREQUISITES IN UBUNTU
         Update 2023-6-1: [source](https://linuxize.com/post/how-to-install-php-8-on-ubuntu-20-04/)
          sudo apt install -y software-properties-common
          sudo add-apt-repository ppa:ondrej/php
-         sudo apt install -y php8.0
+         sudo apt install -y php8.0 php8.0-dev
 	* Install php-pear (PHP Extension and Application Repository)
 	  apt-get install php-pear
 	  to verify whether pear is installed properly or not, type command pear, there you will get
