@@ -20,7 +20,7 @@ INSTALLING PREREQUISITES IN UBUNTU
 	* Install Tool command language (TCL) and TK,for installing expect package 
 	  apt-get install tcl tcl-dev tk tk-dev
 	* Install Expect package, required for php-expect
-	  apt-get install expect expect-dev
+	  apt-get install expect tcl-expect-dev
 	* Install php-expect using pecl
        pecl install expect
 	  Sometime it may give error regarding channel, then use the path mentioned in suggestion like
