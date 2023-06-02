@@ -211,6 +211,7 @@ class Device {
 	fwrite($this->stream,$rpc."\n");
 	while (1) {
             $line = fgets($this->stream);
+            echo "Got: " . $line;
             if (strncmp($line,"<rpc>",5)==0)
                 if (strpos($line,"]]>]]>"))
                     continue;    
@@ -781,8 +782,8 @@ class Device {
         return $rpcReply;
     }
 
-    public function sros_get_config($target,$subsections) {
-        $rpc = '<?xml version="1.0" encoding="UTF-8"?><nc:rpc xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">';
+    public function sros_get_config() {
+        $rpc = '<?xml version="1.0" encoding="UTF-8"?><nc:rpc xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="urn:uuid:13a5a99b-a483-4f74-bbca-b75508f86f91">';
         /* message-id="urn:uuid:13a5a99b-a483-4f74-bbca-b75508f86f91"> */
         $rpc.= '<nc:get><nc:filter>';
         $rpc.= '<state xmlns="urn:nokia.com:sros:ns:yang:sr:state"/>';
@@ -892,7 +893,7 @@ class Device {
      * capabilities specified by user
      */
       private function create_hello_rpc(array $capabilities) {
-        $hello_rpc = "<hello>\n";
+        $hello_rpc = '<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">\n';
         $hello_rpc.="<capabilities>\n";
         foreach ($capabilities as $capIter) {
             $hello_rpc.="<capability>".$capIter."</capability>\n";
