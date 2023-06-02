@@ -7,7 +7,7 @@ include('netconf/Device.php');
  */   
 
 //creating a new device and establishing NETCONF session using key value pair
-$param= array("hostname"=> "abc","username"=>"xyz", "password"=>"ab12jk");
+$param= array("hostname"=> "192.168.121.102","username"=>"admin", "password"=>"admin");
 $d= new Device($param);
 
 //creating a new device, by passing strings as argument  
@@ -28,7 +28,7 @@ try
 {
 $reply=$d->execute_rpc("get-system-information");
 //converting xml reply to string and printing it
-echo $reply->to_string();
+echo 'reply: ', $reply->to_string();
 }
 
 catch(Exception $e)

@@ -133,10 +133,10 @@ class Device {
     *operations.
     */
     public function connect() {
-    $this->stream = expect_popen("ssh -o ConnectTimeout=$this->connectTimeout $this->userName@$this->hostName -p $this->port -s netconf");        
-	ini_set('expect.timeout',  $this->replyTimeout);
-	$flag = true;        
-	while ($flag) {
+      $this->stream = expect_popen("ssh -o ConnectTimeout=$this->connectTimeout $this->userName@$this->hostName -p $this->port -s netconf");        
+      ini_set('expect.timeout',  $this->replyTimeout);
+      $flag = true;        
+      while ($flag) {
         switch (expect_expectl($this->stream,array (
                 array("Password:","PASSWORD"),
                 array("password:","PASSWORD"),
@@ -520,7 +520,7 @@ class Device {
      public function load_text_configuration($configuration,$loadType) {
         if ($loadType == null || (!($loadType == "merge") && !($loadType == "replace")))
             throw new NetconfException ("'loadType' argument must be merge|replace\n");
-	$rpc = "<rpc>";
+        $rpc = "<rpc>";
         $rpc.="<edit-config>";
         $rpc.="<target>";
         $rpc.="<candidate/>";
@@ -537,7 +537,7 @@ class Device {
         $rpc.="</rpc>";
         $rpc.="]]>]]>\n";
         $rpcReply = $this->get_rpc_reply($rpc);
-	$this->last_rpc_reply = $rpcReply;
+        $this->last_rpc_reply = $rpcReply;
         if ($this->has_error() || !$this->is_ok())
             throw new LoadException("Load operation returned error");
     }
@@ -552,17 +552,17 @@ class Device {
     *To load multiple set statements, separate them by '\n' character.
     */
      public function load_set_configuration($configuration) {
-	$rpc = "<rpc>";
+        $rpc = "<rpc>";
         $rpc.="<load-configuration action=\"set\">";
         $rpc.="<configuration-set>";
         $rpc.=$configuration;
         $rpc.="</configuration-set>";
         $rpc.="</load-configuration>";
         $rpc.="</rpc>";
-	$rpc.="]]>]]>\n";
+        $rpc.="]]>]]>\n";
         $rpcReply = $this->get_rpc_reply($rpc);
         $this->last_rpc_reply = $rpcReply;
-	if ($this->has_error() || !$this->is_ok())
+        if ($this->has_error() || !$this->is_ok())
             throw new LoadException("Load operation returned error");
     }
 
@@ -776,6 +776,20 @@ class Device {
         $rpc.="</get-config>";
         $rpc.="</rpc>";
         $rpc.="]]>]]>\n";
+        $rpcReply = $this->get_rpc_reply($rpc);
+        $this->last_rpc_reply = $rpcReply;
+        return $rpcReply;
+    }
+
+    public function sros_get_config($target,$subsections) {
+        $rpc = '<?xml version="1.0" encoding="UTF-8"?><nc:rpc xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">';
+        /* message-id="urn:uuid:13a5a99b-a483-4f74-bbca-b75508f86f91"> */
+        $rpc.= '<nc:get><nc:filter>';
+        $rpc.= '<state xmlns="urn:nokia.com:sros:ns:yang:sr:state"/>';
+        $rpc.= '<configure xmlns="urn:nokia.com:sros:ns:yang:sr:conf"/>';
+        $rpc.= '</nc:filter><ns0:with-defaults xmlns:ns0="urn:ietf:params:xml:ns:yang:ietf-netconf-with-defaults">report-all</ns0:with-defaults></nc:get></nc:rpc>';
+        $rpc.= "]]>]]>\n";
+        echo "SROS get config:".$rpc;
         $rpcReply = $this->get_rpc_reply($rpc);
         $this->last_rpc_reply = $rpcReply;
         return $rpcReply;
