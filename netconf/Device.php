@@ -76,8 +76,8 @@ class Device {
         $this->hostName = $arr[0];
         $this->userName = $arr[1];
         $this->password = $arr[2];
-	$this->connectTimeout = 10;
-	$this->replyTimeout =600;
+        $this->connectTimeout = 10;
+        $this->replyTimeout =600;
         $this->is_connected = false;
     }
  
@@ -257,8 +257,8 @@ class Device {
             $rpc_reply_string = $this->get_rpc_reply($rpcString);
         }
         $this->last_rpc_reply = $rpc_reply_string;
-	$rpc_reply = $this->convert_to_xml($rpc_reply_string);
-	return $rpc_reply;
+        $rpc_reply = $this->convert_to_xml($rpc_reply_string);
+        return $rpc_reply;
     }
 
     /**
@@ -782,15 +782,12 @@ class Device {
         return $rpcReply;
     }
 
-    public function sros_get_config() {
-        $rpc = '<?xml version="1.0" encoding="UTF-8"?><nc:rpc xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="urn:uuid:13a5a99b-a483-4f74-bbca-b75508f86f91">';
+    public function get_config_ns($filter) {
+        $rpc = '<?xml version="1.0" encoding="UTF-8"?><nc:rpc xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="urn:0">';
         /* message-id="urn:uuid:13a5a99b-a483-4f74-bbca-b75508f86f91"> */
-        $rpc.= '<nc:get><nc:filter>';
-        $rpc.= '<state xmlns="urn:nokia.com:sros:ns:yang:sr:state"/>';
-        $rpc.= '<configure xmlns="urn:nokia.com:sros:ns:yang:sr:conf"/>';
-        $rpc.= '</nc:filter><ns0:with-defaults xmlns:ns0="urn:ietf:params:xml:ns:yang:ietf-netconf-with-defaults">report-all</ns0:with-defaults></nc:get></nc:rpc>';
+        $rpc.= '<nc:get><nc:filter>'.$filter.'</nc:filter>';
+        $rpc.= '<ns0:with-defaults xmlns:ns0="urn:ietf:params:xml:ns:yang:ietf-netconf-with-defaults">report-all</ns0:with-defaults></nc:get></nc:rpc>';
         $rpc.= "]]>]]>\n";
-        echo "SROS get config:".$rpc;
         $rpcReply = $this->get_rpc_reply($rpc);
         $this->last_rpc_reply = $rpcReply;
         return $rpcReply;
