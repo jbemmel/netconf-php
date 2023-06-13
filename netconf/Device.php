@@ -207,35 +207,34 @@ class Device {
     *Sends the RPC as a string and returns the response as a string.
     */
     private function get_rpc_reply($rpc) {
-	$rpc_reply = "";
-	fwrite($this->stream,$rpc."\n");
-	while (1) {
-            $line = fgets($this->stream);
-            echo "Got: " . $line;
-            if (strncmp($line,"<rpc>",5)==0)
-                if (strpos($line,"]]>]]>"))
-                    continue;    
-                else {
-                 while (1)
-		{
+	 $rpc_reply = "";
+	 fwrite($this->stream,$rpc."\n");
+	 while (1) {
+      $line = fgets($this->stream);
+      echo "Got: " . $line;
+      if (strncmp($line,"<rpc>",5)==0)
+        if (strpos($line,"]]>]]>"))
+          continue;    
+        else {
+          while (1)
+		  {
 			$line = fgets($this->stream);
-			if (strpos($line,"]]>]]>"))
-			 {
-					
-                            $line = fgets($this->stream); 
-                            break;
-                          }
-                }
-                }
-            if ((strncmp($line,"]]>]]>",6))==0)
-                break;
-            $rpc_reply.=$line;
+			if (strpos($line,"]]>]]>")) {
+              $line = fgets($this->stream); 
+              break;
+            }
+          }
         }
-        return $rpc_reply;
+        if ((strncmp($line,"]]>]]>",6))==0 || strncmp($line,"</rpc-reply>",12)==0)
+          break;
+        $rpc_reply.=$line;
+     }
+     return $rpc_reply;
     }
 
     /**
-    *Sends RPC(as XML object or as a String) over the default Netconf session 
+ 
+   *Sends RPC(as XML object or as a String) over the default Netconf session 
     *and get the response as an XML object.
     *<p>
     *@param rpc
@@ -783,10 +782,21 @@ class Device {
     }
 
     public function get_config_ns($filter) {
-        $rpc = '<?xml version="1.0" encoding="UTF-8"?><nc:rpc xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="urn:0">';
+        $rpc = '<?xml version="1.0" encoding="UTF-8"?><rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="urn:0">';
         /* message-id="urn:uuid:13a5a99b-a483-4f74-bbca-b75508f86f91"> */
-        $rpc.= '<nc:get><nc:filter>'.$filter.'</nc:filter>';
-        $rpc.= '<ns0:with-defaults xmlns:ns0="urn:ietf:params:xml:ns:yang:ietf-netconf-with-defaults">report-all</ns0:with-defaults></nc:get></nc:rpc>';
+        $rpc.= '<get><filter>'.$filter.'</filter>';
+        $rpc.= '<ns0:with-defaults xmlns:ns0="urn:ietf:params:xml:ns:yang:ietf-netconf-with-defaults">report-all</ns0:with-defaults></get></rpc>';
+        $rpc.= "]]>]]>\n";
+        $rpcReply = $this->get_rpc_reply($rpc);
+        $this->last_rpc_reply = $rpcReply;
+        return $rpcReply;
+    }
+
+    public function get_target_config_ns($target,$filter) {
+        $rpc = '<?xml version="1.0" encoding="UTF-8"?><rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="urn:0">';
+        /* message-id="urn:uuid:13a5a99b-a483-4f74-bbca-b75508f86f91"> */
+        $rpc.= '<get-config><source><'.$target.'/></source><filter type="subtree">'.$filter.'</filter>';
+        $rpc.= '<ns0:with-defaults xmlns:ns0="urn:ietf:params:xml:ns:yang:ietf-netconf-with-defaults">report-all</ns0:with-defaults></get-config></rpc>';
         $rpc.= "]]>]]>\n";
         $rpcReply = $this->get_rpc_reply($rpc);
         $this->last_rpc_reply = $rpcReply;
